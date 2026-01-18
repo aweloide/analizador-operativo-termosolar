@@ -1,0 +1,1314 @@
+# Configuración de Servidores PI
+pi_servers:
+  pte1:
+    host: "EWIS-PTE1"
+    name: "Termosol 1 (PTE1)"
+    description: "Planta Termosolar Termosol 1"
+    color: "#FF6B6B"  # Rojo
+
+  pte2:
+    host: "EWIS-PTE2"
+    name: "Termosol 2 (PTE2)"
+    description: "Planta Termosolar Termosol 2"
+    color: "#4ECDC4"  # Azul/Turquesa
+
+# Elementos del Diagrama Esquemático SVG
+# Mapeo de Tags PI → Elementos SVG para inyección de datos en tiempo real
+# Estructura: element_id -> configuración
+schematic_elements:
+  enabled: true
+  description: "Elementos mostrados en el diagrama SVG con datos en tiempo real de PI"
+
+  c_nlocstracking100:
+    name: C_nLOCsTracking100.Out
+    description: SCA EN TRACKING [SCA TRACKING]
+    svg_element_id: C_NLOCSTRACKING100.OUT
+    tags:
+      pte1: C_NLOCSTRACKING100.OUT
+      pte2: C_NLOCSTRACKING100.OUT
+    color: '#A9A9A9'
+    format: '{value:.2f} N/A'
+  c_nlocsoperativos100:
+    name: C_nLOCsOperativos100.Out
+    description: SCA OPERATIVOS EN CS [SCA OPERATING IN SF]
+    svg_element_id: C_NLOCSOPERATIVOS100.OUT
+    tags:
+      pte1: C_NLOCSOPERATIVOS100.OUT
+      pte2: C_NLOCSOPERATIVOS100.OUT
+    color: '#000000'
+    format: '{value:.2f} MWh'
+  a01gz001_rdire:
+    name: A01GZ001_Rdire.Out
+    description: Radiacion directa estacion meteorologica SO
+    svg_element_id: A01GZ001_RDIRE.OUT
+    tags:
+      pte1: A01GZ001_RDIRE.OUT
+      pte2: A01GZ001_RDIRE.OUT
+    color: '#FF8C00'
+    format: '{value:.1f} W/m²'
+  a02gz001_rdire:
+    name: A02GZ001_Rdire.Out
+    description: Radiacion directa estacion meteorologica central
+    svg_element_id: A02GZ001_RDIRE.OUT
+    tags:
+      pte1: A02GZ001_RDIRE.OUT
+      pte2: A02GZ001_RDIRE.OUT
+    color: '#FF8C00'
+    format: '{value:.1f} W/m²'
+  a03gz001_rdire:
+    name: A03GZ001_Rdire.Out
+    description: Radiacion directa estacion meteorologica norte
+    svg_element_id: A03GZ001_RDIRE.OUT
+    tags:
+      pte1: A03GZ001_RDIRE.OUT
+      pte2: A03GZ001_RDIRE.OUT
+    color: '#FF8C00'
+    format: '{value:.1f} W/m²'
+  c_c_dni_selected:
+    name: C_C_DNI_Selected.Out
+    description: DNI SELECCIONADO [DNI INSTAN SELECTED]
+    svg_element_id: C_C_DNI_SELECTED.OUT
+    tags:
+      pte1: C_C_DNI_SELECTED.OUT
+      pte2: C_C_DNI_SELECTED.OUT
+    color: '#DC143C'
+    format: '{value:.1f}°C'
+  a01gz001_rdire_med:
+    name: A01GZ001_Rdire_med.Out
+    description: Radiacion media directa estacion meteorologica SO
+    svg_element_id: A01GZ001_RDIRE_MED.OUT
+    tags:
+      pte1: A01GZ001_RDIRE_MED.OUT
+      pte2: A01GZ001_RDIRE_MED.OUT
+    color: '#FF8C00'
+    format: '{value:.1f} W/m²'
+  a02gz001_rdire_med:
+    name: A02GZ001_Rdire_med.Out
+    description: Radiacion media directa estacion meteorologica central
+    svg_element_id: A02GZ001_RDIRE_MED.OUT
+    tags:
+      pte1: A02GZ001_RDIRE_MED.OUT
+      pte2: A02GZ001_RDIRE_MED.OUT
+    color: '#FF8C00'
+    format: '{value:.1f} W/m²'
+  a03gz001_rdire_med:
+    name: A03GZ001_Rdire_med.Out
+    description: Radiacion media directa estacion meteorologica norte
+    svg_element_id: A03GZ001_RDIRE_MED.OUT
+    tags:
+      pte1: A03GZ001_RDIRE_MED.OUT
+      pte2: A03GZ001_RDIRE_MED.OUT
+    color: '#FF8C00'
+    format: '{value:.1f} W/m²'
+  c_c_dnim_selected:
+    name: C_C_DNIM_Selected.Out
+    description: DNI MEDIA SELECCION [DNI AVG SELECTION]
+    svg_element_id: C_C_DNIM_SELECTED.OUT
+    tags:
+      pte1: C_C_DNIM_SELECTED.OUT
+      pte2: C_C_DNIM_SELECTED.OUT
+    color: '#DC143C'
+    format: '{value:.1f}°C'
+  c_c_windm_selected:
+    name: C_C_WindM_Selected.Out
+    description: VELOCIDAD MEDIA DEL VIENTO [AVG WIND SPEED]
+    svg_element_id: C_C_WINDM_SELECTED.OUT
+    tags:
+      pte1: C_C_WINDM_SELECTED.OUT
+      pte2: C_C_WINDM_SELECTED.OUT
+    color: '#DC143C'
+    format: '{value:.1f}°C'
+  a02gz001_humm:
+    name: A02GZ001_HumM.Out
+    description: Humedad media relativa estacion meteorologica central
+    svg_element_id: A02GZ001_HUMM.OUT
+    tags:
+      pte1: A02GZ001_HUMM.OUT
+      pte2: A02GZ001_HUMM.OUT
+    color: '#FF8C00'
+    format: '{value:.1f} %'
+  a02gz001_tempm:
+    name: A02GZ001_TempM.Out
+    description: Temperatura ambiente media estacion meteorologica central
+    svg_element_id: A02GZ001_TEMPM.OUT
+    tags:
+      pte1: A02GZ001_TEMPM.OUT
+      pte2: A02GZ001_TEMPM.OUT
+    color: '#DC143C'
+    format: '{value:.1f}°C'
+  # 21wam10ct2oo3:
+  #   name: 11WAM10CT2oo3.Out
+  #   description: TEMP HTF ENT COLECTOR PPAL NO/NE
+  #   svg_element_id: 1WAM10CT2OO3.OUT
+  #   tags:
+  #     pte1: 11WAM10CT2OO3.OUT
+  #     pte2: 21WAM10CT2OO3.OUT
+  #   color: '#DC143C'
+  #   format: '{value:.1f}°C'
+  # 21wam30ct2oo3:
+  #   name: 11WAM30CT2oo3.Out
+  #   description: TEMP HTF ENT COLECTOR PPAL SO/SE
+  #   svg_element_id: 1WAM30CT2OO3.OUT
+  #   tags:
+  #     pte1: 11WAM30CT2OO3.OUT
+  #     pte2: 21WAM30CT2OO3.OUT
+  #   color: '#DC143C'
+  #   format: '{value:.1f}°C'
+  # 21wam52ct2oo3:
+  #   name: 11WAM52CT2oo3.Out
+  #   description: TEMP SAL HTF COLECTOR NORTE-ESTE
+  #   svg_element_id: 1WAM52CT2OO3.OUT
+  #   tags:
+  #     pte1: 11WAM52CT2OO3.OUT
+  #     pte2: 21WAM52CT2OO3.OUT
+  #   color: '#DC143C'
+  #   format: '{value:.1f}°C'
+  # 21wam51ct2oo3:
+  #   name: 11WAM51CT2oo3.Out
+  #   description: TEMP SAL HTF COLECTOR NORTE-OESTE
+  #   svg_element_id: 1WAM51CT2OO3.OUT
+  #   tags:
+  #     pte1: 11WAM51CT2OO3.OUT
+  #     pte2: 21WAM51CT2OO3.OUT
+  #   color: '#DC143C'
+  #   format: '{value:.1f}°C'
+  # 21wam82ct2oo3:
+  #   name: 11WAM82CT2oo3.Out
+  #   description: TEMP SAL HTF COLECTOR SUR-ESTE
+  #   svg_element_id: 1WAM82CT2OO3.OUT
+  #   tags:
+  #     pte1: 11WAM82CT2OO3.OUT
+  #     pte2: 21WAM82CT2OO3.OUT
+  #   color: '#DC143C'
+  #   format: '{value:.1f}°C'
+  # 21wam81ct2oo3:
+  #   name: 11WAM81CT2oo3.Out
+  #   description: TEMP SAL HTF COLECTOR SUR-OESTE
+  #   svg_element_id: 1WAM81CT2OO3.OUT
+  #   tags:
+  #     pte1: 11WAM81CT2OO3.OUT
+  #     pte2: 21WAM81CT2OO3.OUT
+  #   color: '#DC143C'
+  #   format: '{value:.1f}°C'
+  22wtb10ct1oo2b:
+    name: 12WTB10CT1oo2B.Out
+    description: TEMP HTF A TGV
+    svg_element_id: 2WTB10CT1OO2B.OUT
+    tags:
+      pte1: 12WTB10CT1OO2B.OUT
+      pte2: 22WTB10CT1OO2B.OUT
+    color: '#DC143C'
+    format: '{value:.1f}°C'
+  22wtb10ct003_jt01:
+    name: 12WTB10CT003_JT01.Out
+    description: TEMP HTF BYP TGV
+    svg_element_id: 2WTB10CT003_JT01.OUT
+    tags:
+      pte1: 12WTB10CT003_JT01.OUT
+      pte2: 22WTB10CT003_JT01.OUT
+    color: '#DC143C'
+    format: '{value:.1f}°C'
+  22wtb12ct001_jt01:
+    name: 12WTB12CT001_JT01.Out
+    description: TEMP 1 BYP HTF CARGA TÉRMICA
+    svg_element_id: 2WTB12CT001_JT01.OUT
+    tags:
+      pte1: 12WTB12CT001_JT01.OUT
+      pte2: 22WTB12CT001_JT01.OUT
+    color: '#DC143C'
+    format: '{value:.1f}°C'
+  # 22wtd81ct002_jt01:
+  #   name: 12WTD81CT002_JT01.Out
+  #   description: TEMP 2 VOLUMEN MUERTO HTF INTERC. SALES.
+  #   svg_element_id: 2WTD81CT002_JT01.OUT
+  #   tags:
+  #     pte1: 12WTD81CT002_JT01.OUT
+  #     pte2: 22WTD81CT002_JT01.OUT
+  #   color: '#DC143C'
+  #   format: '{value:.1f}°C'
+  # 22wtd81ct1oo2:
+  #   name: 12WTD81CT1oo2.Out
+  #   description: TEMP HTF INTERC. A DEPOS EXP / BBAS PPALES A INTERC
+  #   svg_element_id: 2WTD81CT1OO2.OUT
+  #   tags:
+  #     pte1: 12WTD81CT1OO2.OUT
+  #     pte2: 22WTD81CT1OO2.OUT
+  #   color: '#DC143C'
+  #   format: '{value:.1f}°C'
+  # 22wtc22ct1oo2:
+  #   name: 12WTC22CT1oo2.Out
+  #   description: TEMP HTF DESDE BMBS PPALES DE ACEITE TERMICO
+  #   svg_element_id: 2WTC22CT1OO2.OUT
+  #   tags:
+  #     pte1: 12WTC22CT1OO2.OUT
+  #     pte2: 22WTC22CT1OO2.OUT
+  #   color: '#DC143C'
+  #   format: '{value:.1f}°C'
+  # 22wtd30ct001_jt01:
+  #   name: 12WTD30CT001_JT01.Out
+  #   description: TEMP 1 HTF A S.F. / DESDE P.B.
+  #   svg_element_id: 2WTD30CT001_JT01.OUT
+  #   tags:
+  #     pte1: 12WTD30CT001_JT01.OUT
+  #     pte2: 22WTD30CT001_JT01.OUT
+  #   color: '#DC143C'
+  #   format: '{value:.1f}°C'
+  23wsh10ct999a:
+    name: 13WSH10CT999A.Out
+    description: TEMP TQ SALES CAL MEDIA TOTAL
+    svg_element_id: 3WSH10CT999A.OUT
+    tags:
+      pte1: 13WSH10CT999A.OUT
+      pte2: 23WSH10CT999A.OUT
+    color: '#DC143C'
+    format: '{value:.1f}°C'
+  23wsc10ct999a:
+    name: 13WSC10CT999A.Out
+    description: TEMP TQ SALES FRIAS MEDIA TOTAL
+    svg_element_id: 3WSC10CT999A.OUT
+    tags:
+      pte1: 13WSC10CT999A.OUT
+      pte2: 23WSC10CT999A.OUT
+    color: '#DC143C'
+    format: '{value:.1f}°C'
+  # 23wsx70ct2oo3:
+  #   name: 13WSX70CT2oo3.Out
+  #   description: TEMP SALES A/DESDE TQ CAL
+  #   svg_element_id: 3WSX70CT2OO3.OUT
+  #   tags:
+  #     pte1: 13WSX70CT2OO3.OUT
+  #     pte2: 23WSX70CT2OO3.OUT
+  #   color: '#DC143C'
+  #   format: '{value:.1f}°C'
+  # 23wsx10ct2oo3:
+  #   name: 13WSX10CT2oo3.Out
+  #   description: TEMP SALES A/DESDE TQ FRIO
+  #   svg_element_id: 3WSX10CT2OO3.OUT
+  #   tags:
+  #     pte1: 13WSX10CT2OO3.OUT
+  #     pte2: 23WSX10CT2OO3.OUT
+  #   color: '#DC143C'
+  #   format: '{value:.1f}°C'
+  # 24lba10ct905_ze01_out:
+  #   name: 14LBA10CT905_ZE01.Out
+  #   description: MVS INITIAL STEAM TEMP
+  #   svg_element_id: 4LBA10CT905_ZE01.Out
+  #   tags:
+  #     pte1: 14LBA10CT905_ZE01.Out
+  #     pte2: 24LBA10CT905_ZE01.Out
+  #   color: '#DC143C'
+  #   format: '{value:.1f}°C'
+  # 24maa10ct045_xe01_out:
+  #   name: 14MAA10CT045_XE01.Out
+  #   description: TEMP SUPERFICIAL TURBINA AP A DCS
+  #   svg_element_id: 4MAA10CT045_XE01.Out
+  #   tags:
+  #     pte1: 14MAA10CT045_XE01.Out
+  #     pte2: 24MAA10CT045_XE01.Out
+  #   color: '#DC143C'
+  #   format: '{value:.1f}°C'
+  # 24mac10ct045_xe01_out:
+  #   name: 14MAC10CT045_XE01.Out
+  #   description: TEMP CARC TURBINA BP A DCS
+  #   svg_element_id: 4MAC10CT045_XE01.Out
+  #   tags:
+  #     pte1: 14MAC10CT045_XE01.Out
+  #     pte2: 24MAC10CT045_XE01.Out
+  #   color: '#DC143C'
+  #   format: '{value:.1f}°C'
+  # 22wtt01ct013_jt60:
+  #   name: 12WTT01CT013_JT60.Out
+  #   description: HTF1-RAMPA GAS-TEMP GAS
+  #   svg_element_id: 2WTT01CT013_JT60.OUT
+  #   tags:
+  #     pte1: 12WTT01CT013_JT60.OUT
+  #     pte2: 22WTT01CT013_JT60.OUT
+  #   color: '#DC143C'
+  #   format: '{value:.1f}°C'
+  # 22wtt02ct013_jt60:
+  #   name: 12WTT02CT013_JT60.Out
+  #   description: HTF2-RAMPA GAS-TEMP GAS
+  #   svg_element_id: 2WTT02CT013_JT60.OUT
+  #   tags:
+  #     pte1: 12WTT02CT013_JT60.OUT
+  #     pte2: 22WTT02CT013_JT60.OUT
+  #   color: '#DC143C'
+  #   format: '{value:.1f}°C'
+  # 22wtt03ct013_jt60:
+  #   name: 12WTT03CT013_JT60.Out
+  #   description: HTF3-RAMPA GAS-TEMP GAS
+  #   svg_element_id: 2WTT03CT013_JT60.OUT
+  #   tags:
+  #     pte1: 12WTT03CT013_JT60.OUT
+  #     pte2: 22WTT03CT013_JT60.OUT
+  #   color: '#DC143C'
+  #   format: '{value:.1f}°C'
+  # 20ekd58cu001_jt03:
+  #   name: 10EKD58CU001_JT03.Out
+  #   description: ANTORCHA GNL TEMPERATURA [FLARE LNG SUPPLY TEMP]
+  #   svg_element_id: 0EKD58CU001_JT03.OUT
+  #   tags:
+  #     pte1: 10EKD58CU001_JT03.OUT
+  #     pte2: 20EKD58CU001_JT03.OUT
+  #   color: '#DC143C'
+  #   format: '{value:.1f}°C'
+  # 24lba10ct905_ze01:
+  #   name: 14LBA10CT905_ZE01.Out
+  #   description: MVS INITIAL STEAM TEMP
+  #   svg_element_id: 4LBA10CT905_ZE01.OUT
+  #   tags:
+  #     pte1: 14LBA10CT905_ZE01.OUT
+  #     pte2: 24LBA10CT905_ZE01.OUT
+  #   color: '#DC143C'
+  #   format: '{value:.1f}°C'
+  # 24lba20ct905_ze01:
+  #   name: 14LBA20CT905_ZE01.Out
+  #   description: MVS TEMP LP INLET STEAM
+  #   svg_element_id: 4LBA20CT905_ZE01.OUT
+  #   tags:
+  #     pte1: 14LBA20CT905_ZE01.OUT
+  #     pte2: 24LBA20CT905_ZE01.OUT
+  #   color: '#DC143C'
+  #   format: '{value:.1f}°C'
+  # 25lab30ct001_jt01:
+  #   name: 15LAB30CT001_JT01.Out
+  #   description: TEMP SAL PRECAL AP2 A TGV
+  #   svg_element_id: 5LAB30CT001_JT01.OUT
+  #   tags:
+  #     pte1: 15LAB30CT001_JT01.OUT
+  #     pte2: 25LAB30CT001_JT01.OUT
+  #   color: '#DC143C'
+  #   format: '{value:.1f}°C'
+  # 25lab51ct001_jt01:
+  #   name: 15LAB51CT001_JT01.Out
+  #   description: TEMP SAL PRECAL AP2 A DESGASIF
+  #   svg_element_id: 5LAB51CT001_JT01.OUT
+  #   tags:
+  #     pte1: 15LAB51CT001_JT01.OUT
+  #     pte2: 25LAB51CT001_JT01.OUT
+  #   color: '#DC143C'
+  #   format: '{value:.1f}°C'
+  # 25lab20ct002_jt01:
+  #   name: 15LAB20CT002_JT01.Out
+  #   description: TEMP ENT AGUA ALIM A PRECAL AP2
+  #   svg_element_id: 5LAB20CT002_JT01.OUT
+  #   tags:
+  #     pte1: 15LAB20CT002_JT01.OUT
+  #     pte2: 25LAB20CT002_JT01.OUT
+  #   color: '#DC143C'
+  #   format: '{value:.1f}°C'
+  # 25lab11ct001_jt01:
+  #   name: 15LAB11CT001_JT01.Out
+  #   description: 'TEMP ASPIR BMB AGUA ALIM #5LAC11AP001'
+  #   svg_element_id: 5LAB11CT001_JT01.OUT
+  #   tags:
+  #     pte1: 15LAB11CT001_JT01.OUT
+  #     pte2: 25LAB11CT001_JT01.OUT
+  #   color: '#DC143C'
+  #   format: '{value:.1f}°C'
+  # 25lab11ct002_jt01:
+  #   name: 15LAB11CT002_JT01.Out
+  #   description: 'TEMP DESC BMB AGUA ALIM #5LAC11AP001'
+  #   svg_element_id: 5LAB11CT002_JT01.OUT
+  #   tags:
+  #     pte1: 15LAB11CT002_JT01.OUT
+  #     pte2: 25LAB11CT002_JT01.OUT
+  #   color: '#DC143C'
+  #   format: '{value:.1f}°C'
+  # 25lab12ct001_jt01:
+  #   name: 15LAB12CT001_JT01.Out
+  #   description: 'TEMP ASPIR BMB AGUA ALIM #5LAC12AP001'
+  #   svg_element_id: 5LAB12CT001_JT01.OUT
+  #   tags:
+  #     pte1: 15LAB12CT001_JT01.OUT
+  #     pte2: 25LAB12CT001_JT01.OUT
+  #   color: '#DC143C'
+  #   format: '{value:.1f}°C'
+  # 25lab12ct002_jt01:
+  #   name: 15LAB12CT002_JT01.Out
+  #   description: 'TEMP DESC BMB AGUA ALIM #5LAC12AP001'
+  #   svg_element_id: 5LAB12CT002_JT01.OUT
+  #   tags:
+  #     pte1: 15LAB12CT002_JT01.OUT
+  #     pte2: 25LAB12CT002_JT01.OUT
+  #   color: '#DC143C'
+  #   format: '{value:.1f}°C'
+  # 25pab20ct1oo2:
+  #   name: 15PAB20CT1oo2.Out
+  #   description: TEMP ENT CONDENSADOR AGUA CIRCULACION
+  #   svg_element_id: 5PAB20CT1OO2.OUT
+  #   tags:
+  #     pte1: 15PAB20CT1OO2.OUT
+  #     pte2: 25PAB20CT1OO2.OUT
+  #   color: '#DC143C'
+  #   format: '{value:.1f}°C'
+  # 25lab60ct1oo2a:
+  #   name: 15LAB60CT1oo2A.Out
+  #   description: TEMP ENT ECON 1A TGV1
+  #   svg_element_id: 5LAB60CT1OO2A.OUT
+  #   tags:
+  #     pte1: 15LAB60CT1OO2A.OUT
+  #     pte2: 25LAB60CT1OO2A.OUT
+  #   color: '#DC143C'
+  #   format: '{value:.1f}°C'
+  # 25lab70ct1oo2a:
+  #   name: 15LAB70CT1oo2A.Out
+  #   description: TEMP ENT ECON 2A TGV2
+  #   svg_element_id: 5LAB70CT1OO2A.OUT
+  #   tags:
+  #     pte1: 15LAB70CT1OO2A.OUT
+  #     pte2: 25LAB70CT1OO2A.OUT
+  #   color: '#DC143C'
+  #   format: '{value:.1f}°C'
+  # 25paa10ct2oo3:
+  #   name: 15PAA10CT2oo3.Out
+  #   description: TEMP BALSA TORRES REFRIGERACION
+  #   svg_element_id: 5PAA10CT2OO3.OUT
+  #   tags:
+  #     pte1: 15PAA10CT2OO3.OUT
+  #     pte2: 25PAA10CT2OO3.OUT
+  #   color: '#DC143C'
+  #   format: '{value:.1f}°C'
+  # 25lca20ct006_jt01:
+  #   name: 15LCA20CT006_JT01.Out
+  #   description: TEMP LINEA PRECAL BP 3 A DESGASIF
+  #   svg_element_id: 5LCA20CT006_JT01.OUT
+  #   tags:
+  #     pte1: 15LCA20CT006_JT01.OUT
+  #     pte2: 25LCA20CT006_JT01.OUT
+  #   color: '#DC143C'
+  #   format: '{value:.1f}°C'
+  # 25lca20ct002_jt01:
+  #   name: 15LCA20CT002_JT01.Out
+  #   description: TEMP DESC CONDSDR VAPOR DE SELLOS
+  #   svg_element_id: 5LCA20CT002_JT01.OUT
+  #   tags:
+  #     pte1: 15LCA20CT002_JT01.OUT
+  #     pte2: 25LCA20CT002_JT01.OUT
+  #   color: '#DC143C'
+  #   format: '{value:.1f}°C'
+  # 25maa10ct001_jt01:
+  #   name: 15MAA10CT001_JT01.Out
+  #   description: TEMP EXTRAC TV AP A PRECAL AP2
+  #   svg_element_id: 5MAA10CT001_JT01.OUT
+  #   tags:
+  #     pte1: 15MAA10CT001_JT01.OUT
+  #     pte2: 25MAA10CT001_JT01.OUT
+  #   color: '#DC143C'
+  #   format: '{value:.1f}°C'
+  # 25lab41ct001_jt01:
+  #   name: 15LAB41CT001_JT01.Out
+  #   description: TEMP SAL PRECAL AP1 A DESGASIF
+  #   svg_element_id: 5LAB41CT001_JT01.OUT
+  #   tags:
+  #     pte1: 15LAB41CT001_JT01.OUT
+  #     pte2: 25LAB41CT001_JT01.OUT
+  #   color: '#DC143C'
+  #   format: '{value:.1f}°C'
+  # 25lab20ct001_jt01:
+  #   name: 15LAB20CT001_JT01.Out
+  #   description: TEMP ENT AGUA ALIM A PRECAL AP1
+  #   svg_element_id: 5LAB20CT001_JT01.OUT
+  #   tags:
+  #     pte1: 15LAB20CT001_JT01.OUT
+  #     pte2: 25LAB20CT001_JT01.OUT
+  #   color: '#DC143C'
+  #   format: '{value:.1f}°C'
+  # 25mac20ct001_jt01:
+  #   name: 15MAC20CT001_JT01.Out
+  #   description: TEMP EXTRAC TV BP A PRECAL BP 3
+  #   svg_element_id: 5MAC20CT001_JT01.OUT
+  #   tags:
+  #     pte1: 15MAC20CT001_JT01.OUT
+  #     pte2: 25MAC20CT001_JT01.OUT
+  #   color: '#DC143C'
+  #   format: '{value:.1f}°C'
+  # 25lca51ct001_jt01:
+  #   name: 15LCA51CT001_JT01.Out
+  #   description: TEMP SAL PRECAL BP 3
+  #   svg_element_id: 5LCA51CT001_JT01.OUT
+  #   tags:
+  #     pte1: 15LCA51CT001_JT01.OUT
+  #     pte2: 25LCA51CT001_JT01.OUT
+  #   color: '#DC143C'
+  #   format: '{value:.1f}°C'
+  # 25lca41ct001_jt01:
+  #   name: 15LCA41CT001_JT01.Out
+  #   description: TEMP SAL PRECAL BP 2
+  #   svg_element_id: 5LCA41CT001_JT01.OUT
+  #   tags:
+  #     pte1: 15LCA41CT001_JT01.OUT
+  #     pte2: 25LCA41CT001_JT01.OUT
+  #   color: '#DC143C'
+  #   format: '{value:.1f}°C'
+  # 25lca20ct005_jt01:
+  #   name: 15LCA20CT005_JT01.Out
+  #   description: TEMP ENT PRECAL BP 3
+  #   svg_element_id: 5LCA20CT005_JT01.OUT
+  #   tags:
+  #     pte1: 15LCA20CT005_JT01.OUT
+  #     pte2: 25LCA20CT005_JT01.OUT
+  #   color: '#DC143C'
+  #   format: '{value:.1f}°C'
+  # 25lca31ct001_jt01:
+  #   name: 15LCA31CT001_JT01.Out
+  #   description: TEMP SAL PRECAL BP 1 A CONDSDR
+  #   svg_element_id: 5LCA31CT001_JT01.OUT
+  #   tags:
+  #     pte1: 15LCA31CT001_JT01.OUT
+  #     pte2: 25LCA31CT001_JT01.OUT
+  #   color: '#DC143C'
+  #   format: '{value:.1f}°C'
+  # 25lca20ct003_jt01:
+  #   name: 15LCA20CT003_JT01.Out
+  #   description: TEMP ENT PRECAL BP 1
+  #   svg_element_id: 5LCA20CT003_JT01.OUT
+  #   tags:
+  #     pte1: 15LCA20CT003_JT01.OUT
+  #     pte2: 25LCA20CT003_JT01.OUT
+  #   color: '#DC143C'
+  #   format: '{value:.1f}°C'
+  # 25lca20ct004_jt01:
+  #   name: 15LCA20CT004_JT01.Out
+  #   description: TEMP ENT PRECAL BP 2
+  #   svg_element_id: 5LCA20CT004_JT01.OUT
+  #   tags:
+  #     pte1: 15LCA20CT004_JT01.OUT
+  #     pte2: 25LCA20CT004_JT01.OUT
+  #   color: '#DC143C'
+  #   format: '{value:.1f}°C'
+  # 22wtt01cp003_jt50:
+  #   name: 12WTT01CP003_JT50.Out
+  #   description: HTF1-RAMPA GAS-PRESION GAS
+  #   svg_element_id: 2WTT01CP003_JT50.OUT
+  #   tags:
+  #     pte1: 12WTT01CP003_JT50.OUT
+  #     pte2: 22WTT01CP003_JT50.OUT
+  #   color: '#1E90FF'
+  #   format: '{value:.2f} bar'
+  # 22wtt02cp003_jt50:
+  #   name: 12WTT02CP003_JT50.Out
+  #   description: HTF2-RAMPA GAS-PRESION GAS
+  #   svg_element_id: 2WTT02CP003_JT50.OUT
+  #   tags:
+  #     pte1: 12WTT02CP003_JT50.OUT
+  #     pte2: 22WTT02CP003_JT50.OUT
+  #   color: '#1E90FF'
+  #   format: '{value:.2f} bar'
+  # 22wtt03cp003_jt50:
+  #   name: 12WTT03CP003_JT50.Out
+  #   description: HTF3-RAMPA GAS-PRESION GAS
+  #   svg_element_id: 2WTT03CP003_JT50.OUT
+  #   tags:
+  #     pte1: 12WTT03CP003_JT50.OUT
+  #     pte2: 22WTT03CP003_JT50.OUT
+  #   color: '#1E90FF'
+  #   format: '{value:.2f} bar'
+  # 20ekd58cu001_jt04:
+  #   name: 10EKD58CU001_JT04.Out
+  #   description: ANTORCHA GNL PRESION [FLARE LNG SUPPLY PRES]
+  #   svg_element_id: 0EKD58CU001_JT04.OUT
+  #   tags:
+  #     pte1: 10EKD58CU001_JT04.OUT
+  #     pte2: 20EKD58CU001_JT04.OUT
+  #   color: '#1E90FF'
+  #   format: '{value:.2f} bar'
+  # a02gz001_presm:
+  #   name: A02GZ001_PresM.Out
+  #   description: Presion media atmosferica estacion meteorologica central
+  #   svg_element_id: A02GZ001_PRESM.OUT
+  #   tags:
+  #     pte1: A02GZ001_PRESM.OUT
+  #     pte2: A02GZ001_PRESM.OUT
+  #   color: '#1E90FF'
+  #   format: '{value:.2f} bar'
+  # 24mag10cp920_xe01:
+  #   name: 14MAG10CP920_XE01.Out
+  #   description: PRES CONDSDR [CONDSR PRES]
+  #   svg_element_id: 4MAG10CP920_XE01.OUT
+  #   tags:
+  #     pte1: 14MAG10CP920_XE01.OUT
+  #     pte2: 24MAG10CP920_XE01.OUT
+  #   color: '#1E90FF'
+  #   format: '{value:.2f} bar'
+  # 24lba10cp905_xe01:
+  #   name: 14LBA10CP905_XE01.Out
+  #   description: TURB HP STM INLET PRESS
+  #   svg_element_id: 4LBA10CP905_XE01.OUT
+  #   tags:
+  #     pte1: 14LBA10CP905_XE01.OUT
+  #     pte2: 24LBA10CP905_XE01.OUT
+  #   color: '#1E90FF'
+  #   format: '{value:.2f} bar'
+  # 24maa10cp910_xe01:
+  #   name: 14MAA10CP910_XE01.Out
+  #   description: PRES SALIDA TV AP [TURB HP EXHAUST PRESS]
+  #   svg_element_id: 4MAA10CP910_XE01.OUT
+  #   tags:
+  #     pte1: 14MAA10CP910_XE01.OUT
+  #     pte2: 24MAA10CP910_XE01.OUT
+  #   color: '#1E90FF'
+  #   format: '{value:.2f} bar'
+  # 24lba20cp905_xe01:
+  #   name: 14LBA20CP905_XE01.Out
+  #   description: TURB LP STM INLET PRESS
+  #   svg_element_id: 4LBA20CP905_XE01.OUT
+  #   tags:
+  #     pte1: 14LBA20CP905_XE01.OUT
+  #     pte2: 24LBA20CP905_XE01.OUT
+  #   color: '#1E90FF'
+  #   format: '{value:.2f} bar'
+  # 25lab50cp001_jt01:
+  #   name: 15LAB50CP001_JT01.Out
+  #   description: PRES PRECAL AP2
+  #   svg_element_id: 5LAB50CP001_JT01.OUT
+  #   tags:
+  #     pte1: 15LAB50CP001_JT01.OUT
+  #     pte2: 25LAB50CP001_JT01.OUT
+  #   color: '#1E90FF'
+  #   format: '{value:.2f} bar'
+  # 24maa10cp007_xe01:
+  #   name: 14MAA10CP007_XE01.Out
+  #   description: PRES TV AP EXTRACCION [TURB HP EXT PRESS]
+  #   svg_element_id: 4MAA10CP007_XE01.OUT
+  #   tags:
+  #     pte1: 14MAA10CP007_XE01.OUT
+  #     pte2: 24MAA10CP007_XE01.OUT
+  #   color: '#1E90FF'
+  #   format: '{value:.2f} bar'
+  # 25lab11cp002_jt01:
+  #   name: 15LAB11CP002_JT01.Out
+  #   description: 'PRES ASPIR BMB AGUA ALIM #5LAC11AP001'
+  #   svg_element_id: 5LAB11CP002_JT01.OUT
+  #   tags:
+  #     pte1: 15LAB11CP002_JT01.OUT
+  #     pte2: 25LAB11CP002_JT01.OUT
+  #   color: '#1E90FF'
+  #   format: '{value:.2f} bar'
+  # 25lab12cp002_jt01:
+  #   name: 15LAB12CP002_JT01.Out
+  #   description: PRES ASPIR BMB AGUA ALIM#5LAC12AP001
+  #   svg_element_id: 5LAB12CP002_JT01.OUT
+  #   tags:
+  #     pte1: 15LAB12CP002_JT01.OUT
+  #     pte2: 25LAB12CP002_JT01.OUT
+  #   color: '#1E90FF'
+  #   format: '{value:.2f} bar'
+  # 25lab20cp1oo2:
+  #   name: 15LAB20CP1oo2.Out
+  #   description: PRES DESC BBAS AGUA DE ALIM
+  #   svg_element_id: 5LAB20CP1OO2.OUT
+  #   tags:
+  #     pte1: 15LAB20CP1OO2.OUT
+  #     pte2: 25LAB20CP1OO2.OUT
+  #   color: '#1E90FF'
+  #   format: '{value:.2f} bar'
+  # 25lab70cp001_jt01:
+  #   name: 15LAB70CP001_JT01.Out
+  #   description: PRES ENT ECON 2A
+  #   svg_element_id: 5LAB70CP001_JT01.OUT
+  #   tags:
+  #     pte1: 15LAB70CP001_JT01.OUT
+  #     pte2: 25LAB70CP001_JT01.OUT
+  #   color: '#1E90FF'
+  #   format: '{value:.2f} bar'
+  # 25lab60cp001_jt01:
+  #   name: 15LAB60CP001_JT01.Out
+  #   description: PRES ENT ECON 1A
+  #   svg_element_id: 5LAB60CP001_JT01.OUT
+  #   tags:
+  #     pte1: 15LAB60CP001_JT01.OUT
+  #     pte2: 25LAB60CP001_JT01.OUT
+  #   color: '#1E90FF'
+  #   format: '{value:.2f} bar'
+  # 25lbc20cp001_jt01:
+  #   name: 15LBC20CP001_JT01.Out
+  #   description: PRES VRF A RECALENT 1A
+  #   svg_element_id: 5LBC20CP001_JT01.OUT
+  #   tags:
+  #     pte1: 15LBC20CP001_JT01.OUT
+  #     pte2: 25LBC20CP001_JT01.OUT
+  #   color: '#1E90FF'
+  #   format: '{value:.2f} bar'
+  # 25lbc30cp001_jt01:
+  #   name: 15LBC30CP001_JT01.Out
+  #   description: PRES VRF A RECALENT 2A
+  #   svg_element_id: 5LBC30CP001_JT01.OUT
+  #   tags:
+  #     pte1: 15LBC30CP001_JT01.OUT
+  #     pte2: 25LBC30CP001_JT01.OUT
+  #   color: '#1E90FF'
+  #   format: '{value:.2f} bar'
+  # 25pab1xcp1oo2:
+  #   name: 15PAB1xCP1oo2.Out
+  #   description: PRES DESC BMBS AGUA CIRCULACION
+  #   svg_element_id: 5PAB1XCP1OO2.OUT
+  #   tags:
+  #     pte1: 15PAB1XCP1OO2.OUT
+  #     pte2: 25PAB1XCP1OO2.OUT
+  #   color: '#1E90FF'
+  #   format: '{value:.2f} bar'
+  # 25lca20cp002_jt01:
+  #   name: 15LCA20CP002_JT01.Out
+  #   description: PRES LINEA PRECAL BP 3 A DESGASIF
+  #   svg_element_id: 5LCA20CP002_JT01.OUT
+  #   tags:
+  #     pte1: 15LCA20CP002_JT01.OUT
+  #     pte2: 25LCA20CP002_JT01.OUT
+  #   color: '#1E90FF'
+  #   format: '{value:.2f} bar'
+  # 25lca20cp1oo2:
+  #   name: 15LCA20CP1oo2.Out
+  #   description: PRES DESC BMBS DE COND
+  #   svg_element_id: 5LCA20CP1OO2.OUT
+  #   tags:
+  #     pte1: 15LCA20CP1OO2.OUT
+  #     pte2: 25LCA20CP1OO2.OUT
+  #   color: '#1E90FF'
+  #   format: '{value:.2f} bar'
+  # 25had11cp1oo2:
+  #   name: 15HAD11CP1oo2.Out
+  #   description: PRES EVAP TGV1
+  #   svg_element_id: 5HAD11CP1OO2.OUT
+  #   tags:
+  #     pte1: 15HAD11CP1OO2.OUT
+  #     pte2: 25HAD11CP1OO2.OUT
+  #   color: '#1E90FF'
+  #   format: '{value:.2f} bar'
+  # 25had12cp1oo2:
+  #   name: 15HAD12CP1oo2.Out
+  #   description: PRES EVAP TGV2
+  #   svg_element_id: 5HAD12CP1OO2.OUT
+  #   tags:
+  #     pte1: 15HAD12CP1OO2.OUT
+  #     pte2: 25HAD12CP1OO2.OUT
+  #   color: '#1E90FF'
+  #   format: '{value:.2f} bar'
+  # 25han11cp001_jt01:
+  #   name: 15HAN11CP001_JT01.Out
+  #   description: PRES TQ PURGA CONTINUA TGV-1
+  #   svg_element_id: 5HAN11CP001_JT01.OUT
+  #   tags:
+  #     pte1: 15HAN11CP001_JT01.OUT
+  #     pte2: 25HAN11CP001_JT01.OUT
+  #   color: '#1E90FF'
+  #   format: '{value:.2f} bar'
+  # 25han12cp001_jt01:
+  #   name: 15HAN12CP001_JT01.Out
+  #   description: PRES TQ PURGA CONTINUA TGV-2
+  #   svg_element_id: 5HAN12CP001_JT01.OUT
+  #   tags:
+  #     pte1: 15HAN12CP001_JT01.OUT
+  #     pte2: 25HAN12CP001_JT01.OUT
+  #   color: '#1E90FF'
+  #   format: '{value:.2f} bar'
+  # 25maa10cp001_jt01:
+  #   name: 15MAA10CP001_JT01.Out
+  #   description: PRES EXTRAC TV AP A PRECAL AP2
+  #   svg_element_id: 5MAA10CP001_JT01.OUT
+  #   tags:
+  #     pte1: 15MAA10CP001_JT01.OUT
+  #     pte2: 25MAA10CP001_JT01.OUT
+  #   color: '#1E90FF'
+  #   format: '{value:.2f} bar'
+  # 25lbc40cp001_jt01:
+  #   name: 15LBC40CP001_JT01.Out
+  #   description: PRES VAPOR A PRECAL AP 1
+  #   svg_element_id: 5LBC40CP001_JT01.OUT
+  #   tags:
+  #     pte1: 15LBC40CP001_JT01.OUT
+  #     pte2: 25LBC40CP001_JT01.OUT
+  #   color: '#1E90FF'
+  #   format: '{value:.2f} bar'
+  # 25lab40cp001_jt01:
+  #   name: 15LAB40CP001_JT01.Out
+  #   description: PRES PRECAL AP1
+  #   svg_element_id: 5LAB40CP001_JT01.OUT
+  #   tags:
+  #     pte1: 15LAB40CP001_JT01.OUT
+  #     pte2: 25LAB40CP001_JT01.OUT
+  #   color: '#1E90FF'
+  #   format: '{value:.2f} bar'
+  # 25mac20cp001_jt01:
+  #   name: 15MAC20CP001_JT01.Out
+  #   description: PRES EXTRAC TV BP A PRECAL BP 3
+  #   svg_element_id: 5MAC20CP001_JT01.OUT
+  #   tags:
+  #     pte1: 15MAC20CP001_JT01.OUT
+  #     pte2: 25MAC20CP001_JT01.OUT
+  #   color: '#1E90FF'
+  #   format: '{value:.2f} bar'
+  # 25lca50cp001_jt01:
+  #   name: 15LCA50CP001_JT01.Out
+  #   description: PRES PRECAL BP 3
+  #   svg_element_id: 5LCA50CP001_JT01.OUT
+  #   tags:
+  #     pte1: 15LCA50CP001_JT01.OUT
+  #     pte2: 25LCA50CP001_JT01.OUT
+  #   color: '#1E90FF'
+  #   format: '{value:.2f} bar'
+  # 25mac30cp001_jt01:
+  #   name: 15MAC30CP001_JT01.Out
+  #   description: PRES EXTRAC TV BP A PRECAL BP 2
+  #   svg_element_id: 5MAC30CP001_JT01.OUT
+  #   tags:
+  #     pte1: 15MAC30CP001_JT01.OUT
+  #     pte2: 25MAC30CP001_JT01.OUT
+  #   color: '#1E90FF'
+  #   format: '{value:.2f} bar'
+  # 25lca40cp001_jt01:
+  #   name: 15LCA40CP001_JT01.Out
+  #   description: PRES PRECAL BP 2
+  #   svg_element_id: 5LCA40CP001_JT01.OUT
+  #   tags:
+  #     pte1: 15LCA40CP001_JT01.OUT
+  #     pte2: 25LCA40CP001_JT01.OUT
+  #   color: '#1E90FF'
+  #   format: '{value:.2f} bar'
+  # 25mac40cp001_jt01:
+  #   name: 15MAC40CP001_JT01.Out
+  #   description: PRES EXTRAC TV BP A PRECAL BP 1
+  #   svg_element_id: 5MAC40CP001_JT01.OUT
+  #   tags:
+  #     pte1: 15MAC40CP001_JT01.OUT
+  #     pte2: 25MAC40CP001_JT01.OUT
+  #   color: '#1E90FF'
+  #   format: '{value:.2f} bar'
+  # 25lca30cp001_jt01:
+  #   name: 15LCA30CP001_JT01.Out
+  #   description: PRES PRECAL BP 1
+  #   svg_element_id: 5LCA30CP001_JT01.OUT
+  #   tags:
+  #     pte1: 15LCA30CP001_JT01.OUT
+  #     pte2: 25LCA30CP001_JT01.OUT
+  #   color: '#1E90FF'
+  #   format: '{value:.2f} bar'
+  23wsh10cl1oo2:
+    name: 13WSH10CL1oo2.Out
+    description: SEL NVL TQ SALES CAL
+    svg_element_id: 3WSH10CL1OO2.OUT
+    tags:
+      pte1: 13WSH10CL1OO2.OUT
+      pte2: 23WSH10CL1OO2.OUT
+    color: '#A9A9A9'
+    format: '{value:.2f} %'
+  23wsc10cl1oo2:
+    name: 13WSC10CL1oo2.Out
+    description: SEL NVL TQ SALES FRIAS
+    svg_element_id: 3WSC10CL1OO2.OUT
+    tags:
+      pte1: 13WSC10CL1OO2.OUT
+      pte2: 23WSC10CL1OO2.OUT
+    color: '#A9A9A9'
+    format: '{value:.2f}%'
+  # 25paa10cl1oo2:
+  #   name: 15PAA10CL1oo2.Out
+  #   description: NVL BALSA TORRES REFRIGERACION
+  #   svg_element_id: 5PAA10CL1OO2.OUT
+  #   tags:
+  #     pte1: 15PAA10CL1OO2.OUT
+  #     pte2: 25PAA10CL1OO2.OUT
+  #   color: '#A9A9A9'
+  #   format: '{value:.2f} N/A'
+  # 21wam22cf1oo2:
+  #   name: 11WAM22CF1oo2.Out
+  #   description: CAUDAL HTF ENT COLECTOR NORTE-ESTE
+  #   svg_element_id: 1WAM22CF1OO2.OUT
+  #   tags:
+  #     pte1: 11WAM22CF1OO2.OUT
+  #     pte2: 21WAM22CF1OO2.OUT
+  #   color: '#228B22'
+  #   format: '{value:.1f} m³/h'
+  # 21wam21cf1oo2:
+  #   name: 11WAM21CF1oo2.Out
+  #   description: CAUDAL HTF ENT COLECTOR NORTE-OESTE
+  #   svg_element_id: 1WAM21CF1OO2.OUT
+  #   tags:
+  #     pte1: 11WAM21CF1OO2.OUT
+  #     pte2: 21WAM21CF1OO2.OUT
+  #   color: '#228B22'
+  #   format: '{value:.1f} m³/h'
+  # 21wam42cf1oo2:
+  #   name: 11WAM42CF1oo2.Out
+  #   description: CAUDAL HTF ENT COLECTOR SUR-ESTE
+  #   svg_element_id: 1WAM42CF1OO2.OUT
+  #   tags:
+  #     pte1: 11WAM42CF1OO2.OUT
+  #     pte2: 21WAM42CF1OO2.OUT
+  #   color: '#228B22'
+  #   format: '{value:.1f} m³/h'
+  # 21wam41cf1oo2:
+  #   name: 11WAM41CF1oo2.Out
+  #   description: CAUDAL HTF ENT COLECTOR SUR-OESTE
+  #   svg_element_id: 1WAM41CF1OO2.OUT
+  #   tags:
+  #     pte1: 11WAM41CF1OO2.OUT
+  #     pte2: 21WAM41CF1OO2.OUT
+  #   color: '#228B22'
+  #   format: '{value:.1f} m³/h'
+  # sum_htf_tgv:
+  #   name: SUM_HTF_TGV
+  #   description: SUMA CAUDAL HTF TGV
+  #   svg_element_id: SUM_HTF_TGV
+  #   tags:
+  #     pte1: SUM_HTF_TGV
+  #     pte2: SUM_HTF_TGV
+  #   color: '#228B22'
+  #   format: '{value:.1f} m³/h'
+  # 22wtb10cf1oo2:
+  #   name: 12WTB10CF1oo2.Out
+  #   description: CAUDAL HTF SAL TGV
+  #   svg_element_id: 2WTB10CF1OO2.OUT
+  #   tags:
+  #     pte1: 12WTB10CF1OO2.OUT
+  #     pte2: 22WTB10CF1OO2.OUT
+  #   color: '#228B22'
+  #   format: '{value:.1f} m³/h'
+  # 22wtd81cf1oo2:
+  #   name: 12WTD81CF1oo2.Out
+  #   description: CAUDAL HTF INTERC. A DEP EXP/BBAS PPALES A INTERC
+  #   svg_element_id: 2WTD81CF1OO2.OUT
+  #   tags:
+  #     pte1: 12WTD81CF1OO2.OUT
+  #     pte2: 22WTD81CF1OO2.OUT
+  #   color: '#228B22'
+  #   format: '{value:.1f} m³/h'
+  21wamxxcf1oo2:
+    name: 11WAMxxCF1oo2.Out
+    description: CAUDAL CALC HTF CAMPO SOLAR [CALC SF HTF FLOW]
+    svg_element_id: 1WAMXXCF1OO2.OUT
+    tags:
+      pte1: 11WAMXXCF1OO2.OUT
+      pte2: 21WAMXXCF1OO2.OUT
+    color: '#228B22'
+    format: '{value:.1f} m³/h'
+  # 23wsx70cf001_jt01:
+  #   name: 13WSX70CF001_JT01.Out
+  #   description: CAUDAL SALES A/DESDE TQ CAL
+  #   svg_element_id: 3WSX70CF001_JT01.OUT
+  #   tags:
+  #     pte1: 13WSX70CF001_JT01.OUT
+  #     pte2: 23WSX70CF001_JT01.OUT
+  #   color: '#228B22'
+  #   format: '{value:.1f} m³/h'
+  # 23wsx10cf001_jt01:
+  #   name: 13WSX10CF001_JT01.Out
+  #   description: CAUDAL A/DESDE TQ SALES FRIAS
+  #   svg_element_id: 3WSX10CF001_JT01.OUT
+  #   tags:
+  #     pte1: 13WSX10CF001_JT01.OUT
+  #     pte2: 23WSX10CF001_JT01.OUT
+  #   color: '#228B22'
+  #   format: '{value:.1f} m³/h'
+  # 22wtt01cf101_jt40:
+  #   name: 12WTT01CF101_JT40.Out
+  #   description: HTF1-CAUDAL INSTAN GAS [HTF HTR 1 GAS FLOW]
+  #   svg_element_id: 2WTT01CF101_JT40.OUT
+  #   tags:
+  #     pte1: 12WTT01CF101_JT40.OUT
+  #     pte2: 22WTT01CF101_JT40.OUT
+  #   color: '#228B22'
+  #   format: '{value:.1f} m³/h'
+  # 22wtt02cf101_jt40:
+  #   name: 12WTT02CF101_JT40.Out
+  #   description: HTF2-CAUDAL INSTAN GAS [HTF HTR 2 GAS FLOW]
+  #   svg_element_id: 2WTT02CF101_JT40.OUT
+  #   tags:
+  #     pte1: 12WTT02CF101_JT40.OUT
+  #     pte2: 22WTT02CF101_JT40.OUT
+  #   color: '#228B22'
+  #   format: '{value:.1f} m³/h'
+  # 22wtt03cf101_jt40:
+  #   name: 12WTT03CF101_JT40.Out
+  #   description: HTF3-CAUDAL INSTAN GAS [HTF HTR 3 GAS FLOW]
+  #   svg_element_id: 2WTT03CF101_JT40.OUT
+  #   tags:
+  #     pte1: 12WTT03CF101_JT40.OUT
+  #     pte2: 22WTT03CF101_JT40.OUT
+  #   color: '#228B22'
+  #   format: '{value:.1f} m³/h'
+  # 20ekd58cu001_jt02:
+  #   name: 10EKD58CU001_JT02.Out
+  #   description: ANTORCHA GNL CAUDAL CORREGIDO [FLARE LNG SUPPLY FLOW CORRECTED]
+  #   svg_element_id: 0EKD58CU001_JT02.OUT
+  #   tags:
+  #     pte1: 10EKD58CU001_JT02.OUT
+  #     pte2: 20EKD58CU001_JT02.OUT
+  #   color: '#228B22'
+  #   format: '{value:.1f} m³/h'
+  # 25lab11cf1oo2:
+  #   name: 15LAB11CF1oo2.Out
+  #   description: CAUDAL BBA 1 AGUA ALIM
+  #   svg_element_id: 5LAB11CF1OO2.OUT
+  #   tags:
+  #     pte1: 15LAB11CF1OO2.OUT
+  #     pte2: 25LAB11CF1OO2.OUT
+  #   color: '#228B22'
+  #   format: '{value:.1f} m³/h'
+  # 25lab12cf1oo2:
+  #   name: 15LAB12CF1oo2.Out
+  #   description: CAUDAL BBA 2 AGUA ALIM
+  #   svg_element_id: 5LAB12CF1OO2.OUT
+  #   tags:
+  #     pte1: 15LAB12CF1OO2.OUT
+  #     pte2: 25LAB12CF1OO2.OUT
+  #   color: '#228B22'
+  #   format: '{value:.1f} m³/h'
+  # 25lbc60cf001_jt01:
+  #   name: 15LBC60CF001_JT01.Out
+  #   description: CAUDAL LINEA SEPARADOR HUMEDAD A DESGASIF
+  #   svg_element_id: 5LBC60CF001_JT01.OUT
+  #   tags:
+  #     pte1: 15LBC60CF001_JT01.OUT
+  #     pte2: 25LBC60CF001_JT01.OUT
+  #   color: '#228B22'
+  #   format: '{value:.1f} m³/h'
+  # 25lca20cf1oo2:
+  #   name: 15LCA20CF1oo2.Out
+  #   description: CAUDAL CONDSR VAPOR SELLOS [CONDSR STM SEAL FLOW]
+  #   svg_element_id: 5LCA20CF1OO2.OUT
+  #   tags:
+  #     pte1: 15LCA20CF1OO2.OUT
+  #     pte2: 25LCA20CF1OO2.OUT
+  #   color: '#228B22'
+  #   format: '{value:.1f} m³/h'
+  # 25lab60cf1oo2:
+  #   name: 15LAB60CF1oo2.Out
+  #   description: CAUDAL AGUA ALIM A ECON 1A TGV1
+  #   svg_element_id: 5LAB60CF1OO2.OUT
+  #   tags:
+  #     pte1: 15LAB60CF1OO2.OUT
+  #     pte2: 25LAB60CF1OO2.OUT
+  #   color: '#228B22'
+  #   format: '{value:.1f} m³/h'
+  # 25lab70cf1oo2:
+  #   name: 15LAB70CF1oo2.Out
+  #   description: CAUDAL AGUA ALIM A ECON 2A TGV2
+  #   svg_element_id: 5LAB70CF1OO2.OUT
+  #   tags:
+  #     pte1: 15LAB70CF1OO2.OUT
+  #     pte2: 25LAB70CF1OO2.OUT
+  #   color: '#228B22'
+  #   format: '{value:.1f} m³/h'
+  # 25lca20cf002_jt01:
+  #   name: 15LCA20CF002_JT01.Out
+  #   description: CAUDAL LINEA PRECAL BP 3 A DESGASIF
+  #   svg_element_id: 5LCA20CF002_JT01.OUT
+  #   tags:
+  #     pte1: 15LCA20CF002_JT01.OUT
+  #     pte2: 25LCA20CF002_JT01.OUT
+  #   color: '#228B22'
+  #   format: '{value:.1f} m³/h'
+  # 25lba50cf1oo2:
+  #   name: 15LBA50CF1oo2.Out
+  #   description: TGV CAUDAL SAL SOBRECALENT 1
+  #   svg_element_id: 5LBA50CF1OO2.OUT
+  #   tags:
+  #     pte1: 15LBA50CF1OO2.OUT
+  #     pte2: 25LBA50CF1OO2.OUT
+  #   color: '#228B22'
+  #   format: '{value:.1f} m³/h'
+  # 25lba60cf1oo2:
+  #   name: 15LBA60CF1oo2.Out
+  #   description: TGV CAUDAL SAL SOBRECALENT 2
+  #   svg_element_id: 5LBA60CF1OO2.OUT
+  #   tags:
+  #     pte1: 15LBA60CF1OO2.OUT
+  #     pte2: 25LBA60CF1OO2.OUT
+  #   color: '#228B22'
+  #   format: '{value:.1f} m³/h'
+  # 25lbb40cf1oo2:
+  #   name: 15LBB40CF1oo2.Out
+  #   description: CAUDAL 1 SAL RECALENTADOR 1B TGV1
+  #   svg_element_id: 5LBB40CF1OO2.OUT
+  #   tags:
+  #     pte1: 15LBB40CF1OO2.OUT
+  #     pte2: 25LBB40CF1OO2.OUT
+  #   color: '#228B22'
+  #   format: '{value:.1f} m³/h'
+  # 25lbb50cf1oo2:
+  #   name: 15LBB50CF1oo2.Out
+  #   description: CAUDAL 1 SAL RECALENTADOR 2B TGV2
+  #   svg_element_id: 5LBB50CF1OO2.OUT
+  #   tags:
+  #     pte1: 15LBB50CF1OO2.OUT
+  #     pte2: 25LBB50CF1OO2.OUT
+  #   color: '#228B22'
+  #   format: '{value:.1f} m³/h'
+  20bba10gss011_xj14p:
+    name: 10BBA10GSS011_XJ14P.Out
+    description: CARGA AUXILIAR [AUX POWER]
+    svg_element_id: 0BBA10GSS011_XJ14P.OUT
+    tags:
+      pte1: 10BBA10GSS011_XJ14P.OUT
+      pte2: 20BBA10GSS011_XJ14P.OUT
+    color: '#000000'
+    format: '{value:.2f} MWh'
+  24mka10ce001_yu11:
+    name: 14MKA10CE001_YU11.Out
+    description: POTENCIA GENERATOR [GEN GROSS POWER]
+    svg_element_id: 4MKA10CE001_YU11.OUT
+    tags:
+      pte1: 14MKA10CE001_YU11.OUT
+      pte2: 24MKA10CE001_YU11.OUT
+    color: '#000000'
+    format: '{value:.2f} MWh'
+  24bay10gh001_xe08:
+    name: 14BAY10GH001_XE08.Out
+    description: GENERACION NETA [NET GENERATION]
+    svg_element_id: 4BAY10GH001_XE08.OUT
+    tags:
+      pte1: 14BAY10GH001_XE08.OUT
+      pte2: 24BAY10GH001_XE08.OUT
+    color: '#A9A9A9'
+    format: '{value:.2f} N/A'
+  24mka01ce074_xe01:
+    name: 14MKA01CE074_XE01.Out
+    description: POTENCIA ACTIVA [ACTIVE POWER]
+    svg_element_id: 4MKA01CE074_XE01.OUT
+    tags:
+      pte1: 14MKA01CE074_XE01.OUT
+      pte2: 24MKA01CE074_XE01.OUT
+    color: '#000000'
+    format: '{value:.2f} MWh'
+  24mka01ce070_xe01:
+    name: 14MKA01CE070_XE01.OUT
+    description: POTENCIA REACTIVA [REACTIVE POWER]
+    svg_element_id: 4MKA01CE070_XE01.OUT
+    tags:
+      pte1: 14MKA01CE070_XE01.OUT
+      pte2: 24MKA01CE070_XE01.OUT
+    color: '#000000'
+    format: '{value:.2f} MWh'
+  cont_am_principal:
+    name: CONT_AM_PRINCIPAL
+    description: CONTADOR A MINUS PRINCIPAL
+    svg_element_id: CONT_AM_PRINCIPAL
+    tags:
+      pte1: CONT_AM_PRINCIPAL
+      pte2: CONT_AM_PRINCIPAL
+    color: '#A9A9A9'
+    format: '{value:.2f} N/A'
+  cont_am_redundante:
+    name: CONT_AM_REDUNDANTE
+    description: CONTADOR A MINUS REDUNDANTE
+    svg_element_id: CONT_AM_REDUNDANTE
+    tags:
+      pte1: CONT_AM_REDUNDANTE
+      pte2: CONT_AM_REDUNDANTE
+    color: '#A9A9A9'
+    format: '{value:.2f} N/A'
+  # 24maa10cs905_ye01_out:
+  #   name: 14MAA10CS905_YE01.Out
+  #   description: VEL TURB [TURB SPEED]
+  #   svg_element_id: 4MAA10CS905_YE01.Out
+  #   tags:
+  #     pte1: 14MAA10CS905_YE01.Out
+  #     pte2: 24MAA10CS905_YE01.Out
+  #   color: '#A9A9A9'
+  #   format: '{value:.2f} N/A'
+  # pte2_pe_tc_net_act_corr_hr:
+  #   name: PTE2_PE_TC_NET_ACT_CORR_HR
+  #   description: 'TC Corr Net HR (all corrections & ref aux) '
+  #   svg_element_id: PTE2_PE_TC_NET_ACT_CORR_HR
+  #   tags:
+  #     pte1: PTE2_PE_TC_NET_ACT_CORR_HR
+  #     pte2: PTE2_PE_TC_NET_ACT_CORR_HR
+  #   color: '#DC143C'
+  #   format: '{value:.1f}°C'
+  24mka01ce972_xe01:
+    name: 14MKA01CE972_XE01.OUT
+    description: FACTOR DE POTENCIA [GEN POWER FACTOR]
+    svg_element_id: 4MKA01CE972_XE01.OUT
+    tags:
+      pte1: 14MKA01CE972_XE01.OUT
+      pte2: 24MKA01CE972_XE01.OUT
+    color: '#000000'
+    format: '{value:.2f} MWh'
+
+  # # Tanque Sales Calientes
+  # hot_tank:
+  #   name: "Tanque Sales Calientes"
+  #   unit: "°C"
+  #   description: "Temperatura del tanque de sales calientes"
+  #   svg_element_id: "3WSH10CT999A.Out"  # ID del elemento en el SVG
+  #   tags:
+  #     pte1: "13WSH10CT999A.Out"  # Tag real confirmado en EWIS-PTE1
+  #     pte2: "23WSH10CT999A.Out"  # Tag real confirmado en EWIS-PTE2
+  #   color: "#FF4500"
+  #   format: "{value:.1f}°C"
+
+  # # Tanque Sales Frías
+  # cold_tank:
+  #   name: "Tanque Sales Frías"
+  #   unit: "°C"
+  #   description: "Temperatura del tanque de sales frías"
+  #   svg_element_id: "3WSC10CT999A.Out"  # ID del elemento en el SVG
+  #   tags:
+  #     pte1: "13WSC10CT999A.Out"  # Tag real confirmado en EWIS-PTE1
+  #     pte2: "23WSC10CT999A.Out"  # Tag real confirmado en EWIS-PTE2
+  #   color: "#0000FF"
+  #   format: "{value:.1f}°C"
+
+  # # Salida Campo Solar
+  # solar_outlet:
+  #   name: "Salida Campo Solar"
+  #   unit: "°C"
+  #   description: "Temperatura de salida del campo solar"
+  #   svg_element_id: "2WTB10CT1oo2B.Out"  # ID del elemento en el SVG
+  #   tags:
+  #     pte1: "12WTB10CT1oo2B.Out"  # Tag real confirmado en EWIS-PTE1
+  #     pte2: "22WTB10CT1oo2B.Out"  # Tag real confirmado en EWIS-PTE2
+  #   color: "#FFA500"
+  #   format: "{value:.1f}°C"
+
+# Configuración de Intervalos de Actualización
+update_intervals:
+  realtime:
+    enabled: true
+    interval_ms: 30000  # 30 segundos para snapshots
+
+  historical_recent:
+    enabled: true
+    interval_ms: 60000  # 60 segundos para datos históricos recientes
+
+  historical_long:
+    enabled: false  # Solo bajo demanda (cuando el usuario cambia selector)
+
+# Configuración de Caché
+cache:
+  snapshot_ttl: 60       # TTL para snapshots en segundos
+  historical_1h_ttl: 300  # TTL para históricos de 1 hora (5 min)
+  historical_24h_ttl: 600 # TTL para históricos de 24h (10 min)
+  historical_7d_ttl: 1800 # TTL para históricos de 7d (30 min)
+  historical_30d_ttl: 3600 # TTL para históricos de 30d (1 hora)
+
+# Configuración de la Aplicación
+app:
+  title: "Analizador Ciclo Termodinámico"
+  debug: true
+  host: "127.0.0.1"
+  port: 8050
+
+# Límites de Datos
+data_limits:
+  max_realtime_points: 100
+  max_historical_points: 10000
+  aggregation_threshold: 5000  # Agregar si > 5000 puntos
+  timeout_seconds: 10  # Timeout para consultas a PI
+
+# Configuración de Gráficos
+charts:
+  theme: "plotly_white"
+  show_legend: true
+  hovermode: "x unified"
+
+# Notas sobre Tags
+# Los tags que aparecen aquí son placeholders.
+# El usuario debe proporcionar los tags reales de su servidor PI.
+# Una vez que proporcione los tags, reemplazar en las secciones correspondientes.
+#
+# Ejemplo de tags reales:
+# - 13WSH10CT999A.Out (radiación solar)
+# - PTE1.POWER.NET (potencia neta)
+# - PTE1.HTF.TEMP.HOT (temperatura HTF caliente)
