@@ -8,26 +8,38 @@ import pandas as pd
 from typing import Optional, Tuple
 import logging
 
+from .tracking_it_service import TrackingITService
+
 logger = logging.getLogger(__name__)
 
 
 class IndicatorsService:
     """Servicio para obtener indicadores del footer (Energía Día/Mes)"""
 
-    # TAGs de generación neta por planta
-    ENERGY_TAGS = {
-        "pte1": "14BAY10GH001_XE08.OUT",
-        "pte2": "24BAY10GH001_XE08.OUT"
-    }
+    # TAG del contador de energía principal (mismo para ambas plantas)
+    ENERGY_COUNTER_TAG = "CONT_AM_PRINCIPAL"
 
-    def __init__(self, pi_data_service):
+    def __init__(self, pi_data_service, config_loader=None):
         """
         Inicializar servicio de indicadores
 
         Args:
             pi_data_service: Instancia de PIDataService para acceso a datos
+            config_loader: ConfigLoader para acceder a configuración (opcional)
         """
         self.pi_service = pi_data_service
+
+        # Inicializar servicio IT si config disponible
+        if config_loader:
+            try:
+                self.tracking_it_service = TrackingITService(config_loader, pi_data_service)
+                logger.info("TrackingITService inicializado correctamente")
+            except Exception as e:
+                logger.error(f"Error inicializando TrackingITService: {e}")
+                self.tracking_it_service = None
+        else:
+            self.tracking_it_service = None
+            logger.warning("ConfigLoader no proporcionado, IT no disponible")
 
     def get_footer_indicators(self, plant: str) -> Tuple[str, str, str, str, str, str, str]:
         """
@@ -41,12 +53,6 @@ class IndicatorsService:
             minutos >395°C, rendimiento)
         """
         try:
-            # Obtener TAG de generación neta para la planta
-            tag = self.ENERGY_TAGS.get(plant.lower())
-            if not tag:
-                logger.warning(f"Planta desconocida: {plant}")
-                return ("--", "--", "--", "--", "--", "-- min", "--%")
-
             # Asegurar conexión a la planta requerida
             if not self.pi_service._ensure_connected(plant):
                 logger.warning(f"No se pudo conectar a planta {plant}")
@@ -58,13 +64,25 @@ class IndicatorsService:
                 logger.warning(f"No hay connector para {plant}")
                 return ("--", "--", "--", "--", "--", "-- min", "--%")
 
-            # Energía Día (últimas 24 horas)
-            day_result = connector.get_summaries(tag, "*-1d", "*", "1d")
-            energy_day = self._format_energy(day_result)
+            # Calcular energía del día (desde 08:00 de hoy hasta ahora)
+            energy_day = self._calculate_energy_diff(
+                connector,
+                self.ENERGY_COUNTER_TAG,
+                start_time="t+8h",  # Hoy a las 08:00
+                description="día"
+            )
 
-            # Energía Mes (últimos 30 días agrupados por mes)
-            month_result = connector.get_summaries(tag, "*-30d", "*", "1mo")
-            energy_month = self._format_energy(month_result)
+            # Calcular energía del mes (desde día 1 del mes a las 08:00 hasta ahora)
+            from datetime import datetime
+            month_start = datetime.now().replace(day=1, hour=8, minute=0, second=0)
+            month_start_str = month_start.strftime("%Y-%m-%d %H:%M:%S")
+
+            energy_month = self._calculate_energy_diff(
+                connector,
+                self.ENERGY_COUNTER_TAG,
+                start_time=month_start_str,
+                description="mes"
+            )
 
             # Resto permanecen como placeholders (por ahora)
             return (
@@ -81,37 +99,49 @@ class IndicatorsService:
             logger.error(f"Error obteniendo indicadores para {plant}: {e}")
             return ("--", "--", "--", "--", "--", "-- min", "--%")
 
-    def _format_energy(self, result: Optional[pd.DataFrame]) -> str:
+    def _calculate_energy_diff(self, connector, tag: str, start_time: str, description: str) -> str:
         """
-        Extrae y formatea valor de energía desde DataFrame de agregados
+        Calcula energía como diferencia entre valor actual y valor inicial del contador
 
         Args:
-            result: DataFrame retornado por get_summaries() con columna 'TOTAL'
+            connector: PIConnector conectado
+            tag: TAG del contador (ej: CONT_AM_PRINCIPAL)
+            start_time: Tiempo inicial en formato PI (ej: "t+8h", "2026-01-25 08:00:00")
+            description: Descripción para logs (ej: "día", "mes")
 
         Returns:
             String formateado "XXX.XX MWh" o "--" si no hay datos/inválidos
         """
         try:
-            if result is not None and not result.empty:
-                # Último valor en el DataFrame (hoy para diario, mes actual para mensual)
-                value = result['TOTAL'].iloc[-1]
+            # Obtener valor actual del contador (usando recorded_value con "*" = ahora)
+            valor_actual = connector.get_value_at_time(tag, "*")
+            if valor_actual is None:
+                logger.warning(f"No hay valor actual para {tag}")
+                return "--"
 
-                # Convertir a float si es necesario
-                if pd.notna(value):
-                    value_float = float(value)
+            # Obtener valor al inicio del período
+            valor_inicio = connector.get_value_at_time(tag, start_time)
+            if valor_inicio is None:
+                logger.warning(f"No hay valor inicial para {tag} en {start_time}")
+                return "--"
 
-                    # Validar que el valor sea positivo (energía no puede ser negativa)
-                    # Si es negativo, indica un problema con el agregado en PI
-                    if value_float < 0:
-                        logger.warning(f"Valor negativo de energía detectado: {value_float:.2f} MWh. "
-                                     f"Podría indicar reinicio de contador en PI.")
-                        return "--"
+            # Calcular diferencia (contador en kWh)
+            energia_kwh = valor_actual - valor_inicio
 
-                    return f"{value_float:.2f} MWh"
+            # Validar que sea positivo
+            if energia_kwh < 0:
+                logger.warning(f"Energía negativa calculada para {description}: {energia_kwh:.2f} kWh. "
+                             f"Podría indicar reinicio de contador en PI.")
+                return "--"
 
-            logger.debug("DataFrame vacío o None para energy")
-            return "--"
+            # Convertir kWh a MWh
+            energia_mwh = energia_kwh / 1_000
+
+            logger.debug(f"Energía {description}: {energia_mwh:.2f} MWh "
+                        f"(contador: {valor_actual:.0f} - {valor_inicio:.0f} kWh)")
+
+            return f"{energia_mwh:.2f} MWh"
 
         except Exception as e:
-            logger.warning(f"Error formateando energía: {e}")
+            logger.error(f"Error calculando energía {description}: {e}")
             return "--"

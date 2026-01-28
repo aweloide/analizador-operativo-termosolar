@@ -82,7 +82,8 @@ class PIDataService:
             old_connector = self.connectors.get(self.active_plant)
             if old_connector:
                 old_connector.close()
-                del self.connectors[self.active_plant]
+                if self.active_plant in self.connectors:
+                    del self.connectors[self.active_plant]
             self.active_plant = None
 
         # Conectar a la planta requerida si aún no existe el conector

@@ -1266,14 +1266,23 @@ schematic_elements:
 update_intervals:
   realtime:
     enabled: true
-    interval_ms: 30000  # 30 segundos para snapshots
+    interval_ms: 30000  # 30 segundos para snapshots (energía día/mes, conexiones)
+    description: "Actualización de datos en tiempo real y energía acumulada"
 
   historical_recent:
     enabled: true
     interval_ms: 60000  # 60 segundos para datos históricos recientes
+    description: "Actualización de gráficos históricos recientes"
 
   historical_long:
     enabled: false  # Solo bajo demanda (cuando el usuario cambia selector)
+    description: "Datos históricos de largo plazo"
+
+  # NUEVO: Intervalo para indicadores calculados (IT, rendimiento, etc.)
+  indicators_calculated:
+    enabled: true
+    interval_ms: 600000  # 10 minutos (600,000 ms)
+    description: "Actualización de indicadores que requieren cálculos pesados (IT, rendimiento)"
 
 # Configuración de Caché
 cache:
@@ -1282,6 +1291,13 @@ cache:
   historical_24h_ttl: 600 # TTL para históricos de 24h (10 min)
   historical_7d_ttl: 1800 # TTL para históricos de 7d (30 min)
   historical_30d_ttl: 3600 # TTL para históricos de 30d (1 hora)
+
+# Configuración de módulos externos
+external_modules:
+  calculadora_tracking:
+    enabled: true
+    path: "../calculadora-indice-tracking-termosolar"
+    plantas_soportadas: ["pte1"]  # Solo PTE1 por ahora
 
 # Configuración de la Aplicación
 app:

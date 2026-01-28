@@ -248,6 +248,52 @@ class PIConnector:
             logger.error(f"Error obteniendo información del punto: {str(e)}")
             return None
 
+    def get_value_at_time(self, point_name: str, time: str) -> Optional[float]:
+        """
+        Obtiene el último valor registrado de un punto en o antes de un tiempo específico
+
+        Args:
+            point_name: Nombre del punto PI
+            time: Tiempo específico en formato PI (ej: "t+8h", "2026-01-25 08:00:00")
+
+        Returns:
+            Último valor registrado (float) o None si hay error
+        """
+        if not self.is_connected():
+            logger.error("No hay conexión activa al servidor PI")
+            return None
+
+        try:
+            resultados = self.server.search(point_name)
+
+            if not resultados:
+                logger.warning(f"Punto no encontrado: {point_name}")
+                return None
+
+            point = resultados[0]
+
+            # Usar recorded_value() con RetrievalMode.AT_OR_BEFORE
+            # para obtener el último valor antes del tiempo especificado
+            from PIconnect import PIConsts
+
+            data = point.recorded_value(time, retrieval_mode=PIConsts.RetrievalMode.AT_OR_BEFORE)
+
+            if data is None or len(data) == 0:
+                logger.warning(f"No hay valor registrado para {point_name} en o antes de {time}")
+                return None
+
+            # recorded_value() retorna un pandas.Series con un solo valor
+            # El valor está en data.values[0]
+            value = float(data.values[0])
+
+            logger.debug(f"Valor registrado obtenido para {point_name} en {time}: {value} "
+                        f"(timestamp: {data.index[0]})")
+            return value
+
+        except Exception as e:
+            logger.error(f"Error obteniendo valor en tiempo específico para {point_name}: {str(e)}", exc_info=True)
+            return None
+
     def get_summaries(self, point_name: str, start: str, end: str,
                       interval: str = "1d") -> Optional[pd.DataFrame]:
         """

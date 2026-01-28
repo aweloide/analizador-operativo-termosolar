@@ -1,0 +1,1 @@
+Indicas que el cálculo del IT sólo llevará 40 segundo, cuando en la realidad la calculadora tarda varios minutos

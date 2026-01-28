@@ -37,7 +37,7 @@ http://127.0.0.1:8050
 ## 📁 Estructura del Proyecto
 
 ```
-thermosolar-dashboard/
+analizador-operativo-termosolar/
 ├── app.py                          # Aplicación principal Dash
 ├── config.yaml                     # Configuración central
 │
@@ -45,10 +45,16 @@ thermosolar-dashboard/
 │   ├── pages/
 │   │   └── cycle_analysis.py      # Página principal con layout
 │   ├── components/
-│   │   └── thermosolar_schematic.py # Componente SVG con inyección de datos
+│   │   ├── thermosolar_schematic.py # Componente SVG con inyección de datos
+│   │   ├── header.py              # Header con logo y navegación
+│   │   ├── sidebar.py             # Sidebar con selector de planta
+│   │   └── footer.py              # Footer con indicadores KPI
 │   ├── core/
 │   │   ├── pi_connector.py        # Conector a servidores PI
-│   │   └── pi_data_service.py     # Servicio de datos
+│   │   └── pi_data_service.py     # Servicio de datos PI
+│   ├── services/
+│   │   ├── indicators_service.py  # Servicio de indicadores (energía, IT)
+│   │   └── tracking_it_service.py # Servicio de Índice de Tracking ⭐ NUEVO
 │   └── utils/
 │       └── config_loader.py       # Cargador de configuración YAML
 │
@@ -58,9 +64,10 @@ thermosolar-dashboard/
 ├── tests/
 │   └── test_pi_connection.py      # Tests de conexión a PI
 │
-└── DOCUMENTACION/
-    ├── README.md                   # Este archivo
-    └── CAMBIOS_RECIENTES.md        # Historial de cambios
+├── PLANNING.md                     # Plan de implementación IT
+├── DESARROLLO.md                   # Estado del desarrollo
+├── DIRECTRICES.md                  # Guía de desarrollo
+└── README.md                       # Este archivo
 ```
 
 ## ⚙️ Configuración
@@ -96,7 +103,22 @@ schematic_elements:
 ```yaml
 update_intervals:
   realtime:
-    interval_ms: 5000  # 5 segundos
+    interval_ms: 30000  # 30 segundos (energía, conexiones)
+
+  historical_recent:
+    interval_ms: 60000  # 60 segundos (gráficos históricos)
+
+  indicators_calculated:
+    interval_ms: 600000  # 10 minutos (IT, rendimiento)
+```
+
+4. **Módulos Externos** ⭐ NUEVO
+```yaml
+external_modules:
+  calculadora_tracking:
+    enabled: true
+    path: "../calculadora-indice-tracking-termosolar"
+    plantas_soportadas: ["pte1"]
 ```
 
 ## 🔄 Cómo Agregar un Nuevo Elemento
@@ -210,12 +232,110 @@ Los logs se muestran en la terminal donde ejecutas `python app.py`:
 - El sistema lo inyecta automáticamente
 - Verifica que el `svg_element_id` es correcto en config.yaml
 
+## 🎯 Indicadores de Rendimiento (Footer)
+
+El dashboard muestra indicadores clave en el footer para ambas plantas (PTE1 y PTE2):
+
+| Indicador | Descripción | Estado | Intervalo Actualización |
+|-----------|-------------|--------|------------------------|
+| **Energía Día** | Generación neta acumulada desde 08:00 hasta ahora | ✅ Implementado | 30 segundos |
+| **Energía Mes** | Generación neta acumulada desde día 1 a las 08:00 | ✅ Implementado | 30 segundos |
+| **Índice Tracking (IT)** | Eficiencia operacional del campo solar | ✅ Implementado ⭐ | 10 minutos |
+| **TFollow** | Movimientos a TFollow | ⏸️ Placeholder | - |
+| **PFollow** | Movimientos a PFollow | ⏸️ Placeholder | - |
+| **Minutos >395°C** | Tiempo con temperatura alta en SCAs | ⏸️ Placeholder | - |
+| **Rendimiento** | Eficiencia global de planta | ⏸️ Placeholder | - |
+
+### Índice de Tracking (IT) ⭐
+
+**Implementación**: 2026-01-25
+
+El dashboard ejecuta el script `calcular_it_completo.py` del proyecto [`calculadora-indice-tracking-termosolar`](../calculadora-indice-tracking-termosolar/) usando subprocess:
+
+**Características**:
+- ✅ Cálculo completo de IT para PTE1 (640 SCAs)
+- ✅ Actualización configurable (por defecto: 10 minutos)
+- ✅ Caché diario (primera carga ~3-5 min, luego instantáneo)
+- ✅ Persistencia en Store entre actualizaciones
+- ✅ Ejecución aislada (subprocess): robusta y simple
+- ⏸️ PTE2 pendiente (muestra "--" por ahora)
+
+**Fórmula**:
+```
+IT = (DII_total - Pérdidas_operacionales) / DII_total × 100%
+
+Pérdidas_operacionales = Orto→PrimerTracking + ÚltimoTracking→Ocaso +
+                        PFollow + GestiónTransitorios + Otros
+```
+
+**NO incluye**: Pérdidas por desapuntamiento angular ni SCA no disponible
+
+**Valor típico**: 87-95% (valores bajos indican problemas operacionales)
+
+**Ver más**: [PLANNING.md](PLANNING.md) para detalles de implementación
+
+### Energía Día y Energía Mes ✅
+
+**Implementación**: 2026-01-26
+
+Los indicadores de energía se calculan mediante diferencia de contadores acumulativos (TAG: `CONT_AM_PRINCIPAL`):
+
+**Características**:
+- ✅ Cálculo por diferencia de contadores (no por agregados de potencia)
+- ✅ Períodos alineados con operación solar (desde 08:00, no medianoche)
+- ✅ Unidades: kWh en PI, convertido a MWh para display
+- ✅ Validación: Rechaza valores negativos (indicaría reinicio de contador)
+- ✅ Método homogéneo: Usa `recorded_value()` con `AT_OR_BEFORE` para ambos valores
+
+**Fórmula**:
+```python
+# Energía Día (desde hoy 08:00 hasta ahora)
+valor_actual = get_value_at_time("CONT_AM_PRINCIPAL", "*")        # kWh ahora
+valor_inicio = get_value_at_time("CONT_AM_PRINCIPAL", "t+8h")     # kWh a las 08:00
+energia_dia = (valor_actual - valor_inicio) / 1000  # MWh
+
+# Energía Mes (desde día 1 a las 08:00 hasta ahora)
+mes_inicio = "2026-01-01 08:00:00"
+energia_mes = (valor_actual - valor_inicio_mes) / 1000  # MWh
+```
+
+**Valores típicos**:
+- Día: 0-50 MWh (dependiendo de radiación solar)
+- Mes: 400-1000 MWh (plantas de ~50 MW)
+
+---
+
+## 🔧 Configuración Avanzada
+
+### Cambiar Intervalo de Actualización del IT
+
+Edita `config.yaml`:
+```yaml
+indicators_calculated:
+  interval_ms: 300000  # 5 minutos (en vez de 10)
+```
+
+Valores recomendados:
+- **5 minutos**: `300000` ms (más frecuente)
+- **10 minutos**: `600000` ms (por defecto, equilibrado)
+- **15 minutos**: `900000` ms (menor carga)
+
+### Deshabilitar IT Temporalmente
+
+```yaml
+external_modules:
+  calculadora_tracking:
+    enabled: false
+```
+
+---
+
 ## 📞 Contacto
 
 Para preguntas o reportar problemas, contacta al equipo de desarrollo.
 
 ---
 
-**Última actualización**: 2026-01-13
-**Versión**: 2.1
-**Status**: ✅ Operacional
+**Última actualización**: 2026-01-26
+**Versión**: 2.3
+**Status**: ✅ Operacional + IT Integrado + Energía por Contadores

@@ -39,9 +39,11 @@ try:
     # Log interval values
     realtime_interval = config.get_update_interval('realtime')
     historical_interval = config.get_update_interval('historical_recent')
+    calculated_interval = config.get_update_interval('indicators_calculated')
     logger.info(f"Intervals loaded from config:")
     logger.info(f"  - Realtime (interval-fast): {realtime_interval}ms")
     logger.info(f"  - Historical (interval-slow): {historical_interval}ms")
+    logger.info(f"  - Calculated Indicators (interval-indicators-calculated): {calculated_interval}ms")
 
 except Exception as e:
     logger.error(f"Error cargando configuración: {str(e)}")
@@ -56,7 +58,7 @@ except Exception as e:
 
 # Inicializar servicio de indicadores
 try:
-    indicators_service = IndicatorsService(pi_service)
+    indicators_service = IndicatorsService(pi_service, config_loader=config)
     logger.info("IndicatorsService inicializado correctamente")
 except Exception as e:
     logger.error(f"Error inicializando IndicatorsService: {str(e)}")
@@ -128,8 +130,19 @@ app.layout = html.Div([
         disabled=False
     ),
 
+    # NUEVO: Intervalo para indicadores calculados (IT, rendimiento, etc.)
+    dcc.Interval(
+        id='interval-indicators-calculated',
+        interval=config.get_update_interval('indicators_calculated'),
+        n_intervals=0,
+        disabled=False
+    ),
+
     # Stores para datos compartidos
     dcc.Store(id='shared-data-store', data={}),
+
+    # NUEVO: Store para persistir valores de IT entre actualizaciones
+    dcc.Store(id='tracking-index-store', data={'pte1': '--', 'pte2': '--'}),
 
 ], style={"minHeight": "100vh"})
 
@@ -218,18 +231,62 @@ def toggle_sidebar(n_clicks):
     return sidebar_style, main_content_style
 
 
+# Callback para actualizar Índice de Tracking cada 10 minutos
+@callback(
+    [Output('indicator-tracking-index-pte1', 'children'),
+     Output('indicator-tracking-index-pte2', 'children'),
+     Output('tracking-index-store', 'data')],
+    Input('interval-indicators-calculated', 'n_intervals'),
+    State('tracking-index-store', 'data')
+)
+def update_tracking_index(n_intervals, current_values):
+    """
+    Actualiza el Índice de Tracking cada X minutos (configurable en config.yaml)
+    y persiste valores en Store para mostrar entre actualizaciones
+
+    Args:
+        n_intervals: Número de veces que se ha ejecutado el intervalo
+        current_values: Valores actuales de IT en el Store
+
+    Returns:
+        Tuple (it_pte1, it_pte2, store_data)
+    """
+    if indicators_service is None or not hasattr(indicators_service, 'tracking_it_service'):
+        logger.warning("[update_tracking_index] IndicatorsService o TrackingITService no disponible")
+        return current_values.get('pte1', '--'), current_values.get('pte2', '--'), current_values
+
+    try:
+        logger.info(f"[update_tracking_index] Actualizando IT (intervalo #{n_intervals})")
+
+        # Calcular IT para ambas plantas
+        it_pte1 = indicators_service.tracking_it_service.get_it_dia_actual('pte1')
+        it_pte2 = indicators_service.tracking_it_service.get_it_dia_actual('pte2')
+
+        # Actualizar store con nuevos valores
+        new_values = {'pte1': it_pte1, 'pte2': it_pte2}
+
+        logger.info(f"[update_tracking_index] IT actualizado - PTE1: {it_pte1}, PTE2: {it_pte2}")
+
+        return it_pte1, it_pte2, new_values
+
+    except Exception as e:
+        logger.error(f"[update_tracking_index] Error actualizando IT: {e}", exc_info=True)
+        # Mantener valores anteriores en caso de error
+        return current_values.get('pte1', '--'), current_values.get('pte2', '--'), current_values
+
+
 # Callback para actualizar indicadores del footer
 @callback(
     [Output('indicator-energy-day-pte1', 'children'),
      Output('indicator-energy-month-pte1', 'children'),
-     Output('indicator-tracking-index-pte1', 'children'),
+     # ELIMINADO: Output('indicator-tracking-index-pte1', 'children'),
      Output('indicator-tfollow-pte1', 'children'),
      Output('indicator-pfollow-pte1', 'children'),
      Output('indicator-minutes-high-temp-pte1', 'children'),
      Output('indicator-efficiency-pte1', 'children'),
      Output('indicator-energy-day-pte2', 'children'),
      Output('indicator-energy-month-pte2', 'children'),
-     Output('indicator-tracking-index-pte2', 'children'),
+     # ELIMINADO: Output('indicator-tracking-index-pte2', 'children'),
      Output('indicator-tfollow-pte2', 'children'),
      Output('indicator-pfollow-pte2', 'children'),
      Output('indicator-minutes-high-temp-pte2', 'children'),
@@ -239,32 +296,32 @@ def toggle_sidebar(n_clicks):
 def update_footer_indicators(n_intervals):
     """
     Actualiza los indicadores del footer cada 30 segundos
-    Obtiene Energía Día/Mes para PTE1 y PTE2 desde PI
-    Resto son placeholders por ahora
+    NOTA: El Tracking Index se actualiza en su propio callback cada 10 minutos
     """
     if indicators_service is None:
         logger.warning("[update_footer_indicators] IndicatorsService no inicializado")
         return (
-            "-- MWh", "-- MWh", "--", "--", "--", "-- min", "--%",  # PTE1
-            "-- MWh", "-- MWh", "--", "--", "--", "-- min", "--%"   # PTE2
+            "-- MWh", "-- MWh", "--", "--", "-- min", "--%",  # PTE1 (sin IT)
+            "-- MWh", "-- MWh", "--", "--", "-- min", "--%"   # PTE2 (sin IT)
         )
 
     try:
-        logger.debug(f"[update_footer_indicators] Obteniendo indicadores para ambas plantas")
+        logger.info(f"[update_footer_indicators] Obteniendo indicadores para ambas plantas (intervalo #{n_intervals})")
 
-        # Obtener indicadores para PTE1
+        # Obtener indicadores para PTE1 (solo energía día/mes, el resto placeholders)
         indicators_pte1 = indicators_service.get_footer_indicators('pte1')
+        logger.info(f"[update_footer_indicators] PTE1 - Energía Día: {indicators_pte1[0]}, Mes: {indicators_pte1[1]}")
 
         # Obtener indicadores para PTE2
         indicators_pte2 = indicators_service.get_footer_indicators('pte2')
+        logger.info(f"[update_footer_indicators] PTE2 - Energía Día: {indicators_pte2[0]}, Mes: {indicators_pte2[1]}")
 
-        # Retornar en orden: pte1 (energy_day, energy_month, tracking, tfollow, pfollow, high_temp, efficiency)
-        #                    pte2 (energy_day, energy_month, tracking, tfollow, pfollow, high_temp, efficiency)
+        # Retornar en orden (sin tracking index, lo maneja otro callback):
         return (
             # PTE1
             indicators_pte1[0],  # Energy day
             indicators_pte1[1],  # Energy month
-            "--",               # Tracking Index (placeholder)
+            # indicators_pte1[2] es IT, pero ya NO se incluye aquí
             "--",               # TFollow (placeholder)
             "--",               # PFollow (placeholder)
             "-- min",           # Minutos >395°C (placeholder)
@@ -272,7 +329,6 @@ def update_footer_indicators(n_intervals):
             # PTE2
             indicators_pte2[0],  # Energy day
             indicators_pte2[1],  # Energy month
-            "--",               # Tracking Index (placeholder)
             "--",               # TFollow (placeholder)
             "--",               # PFollow (placeholder)
             "-- min",           # Minutos >395°C (placeholder)
@@ -282,8 +338,8 @@ def update_footer_indicators(n_intervals):
     except Exception as e:
         logger.error(f"[update_footer_indicators] Error obteniendo indicadores: {e}")
         return (
-            "-- MWh", "-- MWh", "--", "--", "--", "-- min", "--%",  # PTE1
-            "-- MWh", "-- MWh", "--", "--", "--", "-- min", "--%"   # PTE2
+            "-- MWh", "-- MWh", "--", "--", "-- min", "--%",  # PTE1
+            "-- MWh", "-- MWh", "--", "--", "-- min", "--%"   # PTE2
         )
 
 
